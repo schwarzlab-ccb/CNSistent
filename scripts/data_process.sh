@@ -23,5 +23,6 @@ do
     cns coverage "${out}/${dataset}_cns_align.tsv" --samples "${data}/${dataset}_samples_raw.tsv" --out "${out}/${dataset}_samples_align.tsv" $common_args        
     cns coverage "${out}/${dataset}_cns_align.tsv" --samples "${data}/${dataset}_samples_raw.tsv" --out "${out}/${dataset}_samples.tsv" $common_args --segments "${out}/gaps_${assembly}_segs.bed"
     cns ploidy "${out}/${dataset}_cns_imp.tsv" --samples "${out}/${dataset}_samples.tsv" --out "${out}/${dataset}_samples.tsv" $common_args --segments "${out}/gaps_${assembly}_segs.bed"
+    cns breakage "${out}/${dataset}_cns_imp.tsv" --samples "${out}/${dataset}_samples.tsv" --out "${out}/${dataset}_samples.tsv" $common_args --segments "${out}/gaps_${assembly}_segs.bed"
 done
 
