@@ -12,10 +12,24 @@ maintainers = [
     {name = "Adam Streck", email = "adam.streck@gmail.com"}
 ]
 description = "Tools for imputation, segmentation, analysis, and plotting of Copy Number Segments (CNS)."
-readme = "README.md"
+readme = {file = "README.md", content-type = "text/markdown"}
 license = {text = "MIT"}
+license-files = ["LICENSE.txt"]
 requires-python = ">=3.9"
 keywords = ["bioinformatics", "genomics", "copy number segments", "CNS"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Bio-Informatics"
+]
 dependencies = [
     "pandas>=2.2",
     "numpy",
@@ -23,9 +37,25 @@ dependencies = [
     "numba"
 ]
 
+[project.urls]
+Homepage = "https://github.com/ICCB-Cologne/CNSistent"
+Documentation = "https://cnsistent.readthedocs.io/en/latest"
+Repository = "https://github.com/ICCB-Cologne/CNSistent"
+Issues = "https://github.com/ICCB-Cologne/CNSistent/issues"
+Changelog = "https://github.com/ICCB-Cologne/CNSistent/blob/main/CHANGELOG.md"
+
 [project.scripts]
 cns = "cns.cnsistent:main"
 segment = "cns.segment:main"
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "/cns",
+    "/CHANGELOG.md",
+    "/LICENSE.txt",
+    "/README.md",
+    "/pyproject.toml"
+]
 
 [tool.hatch.build.targets.wheel]
 include = ["cns/cnsistent.py", "cns/**/*.py"]
