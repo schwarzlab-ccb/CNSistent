@@ -1,3 +1,4 @@
+import math
 import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt, patches as mpatches
@@ -24,6 +25,24 @@ def _get_CN_color_vector(min_cn, max_cn):
     # Vectorize with otypes for float output
     vectorized_func = np.vectorize(lambda cn: _get_CN_color(cn, min_cn, max_cn), otypes=[float, float, float])
     return lambda cn_array: np.stack(vectorized_func(cn_array), axis=-1)
+
+
+def _legend_ticks(min_cn, max_cn, max_ticks=11):
+    lo_int = math.ceil(min_cn)
+    hi_int = math.floor(max_cn)
+    has_lo = not math.isclose(min_cn, lo_int)
+    has_hi = not math.isclose(max_cn, hi_int)
+    n_int = hi_int - lo_int + 1
+    slots = max(1, max_ticks - int(has_lo) - int(has_hi))
+    step = max(1, math.ceil(n_int / slots))
+    int_ticks = list(range(lo_int, hi_int + 1, step))
+    ticks = []
+    if has_lo:
+        ticks.append(min_cn)
+    ticks.extend(int_ticks)
+    if has_hi:
+        ticks.append(max_cn)
+    return ticks
 
 
 def _get_start(chrom, assembly):
@@ -490,13 +509,17 @@ def fig_heatmap(cns_df, cn_columns=None, min_cn = 0, max_cn = 10, vertical = Non
     ax.margins(x=0, y=0)
 
     # Add legend
-    handles = []
-    handles.append(mpatches.Patch(facecolor ='blue', label=f'{max_cn:.2f}', edgecolor='black'))
-    handles.append(mpatches.Patch(facecolor ='white', label=f'{min_cn:.2f}', edgecolor='black'))
-    handles.append(mpatches.Patch(facecolor ='red', label='0', edgecolor='black'))
-    handles.append(mpatches.Patch(facecolor ='gray', label='NaN', edgecolor='black'))
-    last_ax = axes[-1] if n_columns > 1 else axes
-    last_ax.legend(handles=handles, loc='upper left', bbox_to_anchor=(1, 1))
+    handles = [mpatches.Patch(facecolor='red', label='0', edgecolor='black')]
+    for tick in _legend_ticks(min_cn, max_cn):
+        color = _get_CN_color(tick, min_cn, max_cn)
+        label = str(int(tick)) if tick == int(tick) else f'{tick:.2f}'
+        handles.append(mpatches.Patch(facecolor=color, label=label, edgecolor='black'))
+    handles.append(mpatches.Patch(facecolor='gray', label='NaN', edgecolor='black'))
+    if n_columns > 1:
+        legend_ax = axes[0] if vertical else axes[-1]
+    else:
+        legend_ax = axes
+    legend_ax.legend(handles=handles, loc='upper left', bbox_to_anchor=(1, 1))
     
     return fig, axes
 
