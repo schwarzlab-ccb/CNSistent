@@ -24,41 +24,30 @@ def add_tails(cns_df, assembly=hg19, print_info=True):
         DataFrame with tails added.
     """
     chr_lens = assembly.chr_lens
-    grouped = cns_df.groupby(["sample_id", "chrom"]).agg({"start": "min", "end": "max"})
-    grouped = grouped.rename(columns={"start": "min_start", "end": "max_end"})
-    grouped = grouped.reset_index()
-    missing_ranges = []
-    for _, row in grouped.iterrows():
-        if row.min_start > 0:
-            missing_ranges.append(
-                {
-                    "sample_id": row.sample_id,
-                    "chrom": row.chrom,
-                    "start": 0,
-                    "end": row.min_start
-                }
-            )
-        if row.max_end < chr_lens[f"{row.chrom}"]:
-            missing_ranges.append(
-                    {
-                        "sample_id": row.sample_id,
-                        "chrom":  row.chrom,
-                        "start": row.max_end,
-                        "end": chr_lens[str(row.chrom)]
-                    }
-            )
+    grouped = cns_df.groupby(["sample_id", "chrom"]).agg({"start": "min", "end": "max"}).rename(
+        columns={"start": "min_start", "end": "max_end"}).reset_index()
+    chr_lens_s = grouped["chrom"].map(chr_lens)
 
-    if len(missing_ranges) == 0:
-        log_info(f"No missing ends found.", suppress=not print_info)
+    head_mask = grouped["min_start"] > 0
+    heads = grouped.loc[head_mask, ["sample_id", "chrom"]].copy()
+    heads["start"] = 0
+    heads["end"] = grouped.loc[head_mask, "min_start"].values
+
+    tail_mask = grouped["max_end"] < chr_lens_s
+    tails = grouped.loc[tail_mask, ["sample_id", "chrom"]].copy()
+    tails["start"] = grouped.loc[tail_mask, "max_end"].values
+    tails["end"] = chr_lens_s[tail_mask].values
+
+    new_rows = pd.concat([heads, tails])
+    n = len(new_rows)
+    if n == 0:
+        log_info("No missing ends found.", suppress=not print_info)
         return cns_df.copy()
-    else:
-        log_info(f"Adding {len(missing_ranges)} missing ends", suppress=not print_info)
-        new_cns_df = pd.DataFrame(missing_ranges, columns=cns_df.columns)
-        res_df = pd.concat([cns_df, new_cns_df])
-        res_df.sort_values(
-            by=["sample_id", "chrom", "start"], inplace=True, ignore_index=True
-        )
-        return res_df
+
+    log_info(f"Adding {n} missing ends", suppress=not print_info)
+    res_df = pd.concat([cns_df, new_rows])
+    res_df.sort_values(by=["sample_id", "chrom", "start"], inplace=True, ignore_index=True)
+    return res_df
 
 
 def fill_gaps(cns_df, print_info=True):
@@ -77,38 +66,25 @@ def fill_gaps(cns_df, print_info=True):
     pandas.DataFrame
         DataFrame with gaps filled.
     """
-    # Iterate over the rows
-    new_rows = []
-    for i in range(len(cns_df) - 1):
-        # Check if the next row has the same 'sample_id' and 'chrom'
-        if (
-            cns_df.at[i, "sample_id"] == cns_df.at[i + 1, "sample_id"]
-            and cns_df.at[i, "chrom"] == cns_df.at[i + 1, "chrom"]
-        ):
-            # Calculate the range
-            range_start = cns_df.at[i, "end"]
-            range_end = cns_df.at[i + 1, "start"]
-            # If the range is greater than 1, add a new row
-            if range_end > range_start:
-                new_rows.append(
-                    {
-                        "sample_id": cns_df.at[i, "sample_id"],
-                        "chrom": cns_df.at[i, "chrom"],
-                        "start": range_start,
-                        "end": range_end,
-                    }
-                )
+    next_row = cns_df.shift(-1)
+    same_contig = (cns_df["sample_id"] == next_row["sample_id"]) & (cns_df["chrom"] == next_row["chrom"])
+    mask = same_contig & (next_row["start"] > cns_df["end"])
 
-    if len(new_rows) == 0:
-        log_info(f"No gaps found.", suppress=not print_info)
+    n_gaps = mask.sum()
+    if n_gaps == 0:
+        log_info("No gaps found.", suppress=not print_info)
         return cns_df.copy()
-    else:
-        # Concatenate the cns_dfs
-        log_info(f"Filling {len(new_rows)} gaps.", suppress=not print_info)
-        new_cns_df = pd.DataFrame(new_rows, columns=cns_df.columns)
-        res_df = pd.concat([cns_df, new_cns_df])
-        res_df.sort_values(by=["sample_id", "chrom", "start"], inplace=True, ignore_index=True)
-        return res_df
+
+    log_info(f"Filling {n_gaps} gaps.", suppress=not print_info)
+    new_rows = pd.DataFrame({
+        "sample_id": cns_df.loc[mask, "sample_id"].values,
+        "chrom": cns_df.loc[mask, "chrom"].values,
+        "start": cns_df.loc[mask, "end"].values,
+        "end": next_row.loc[mask, "start"].values,
+    })
+    res_df = pd.concat([cns_df, new_rows])
+    res_df.sort_values(by=["sample_id", "chrom", "start"], inplace=True, ignore_index=True)
+    return res_df
 
 
 # Add fully missing chromosomes
@@ -184,26 +160,16 @@ def remove_outliers(cns_df, assembly=hg19, print_info=True):
     pandas.DataFrame
         DataFrame with outliers removed.
     """
-    res_df = cns_df.copy()
     chr_lens = assembly.chr_lens
-    idx_to_remove = []
-    for i, (index, row) in enumerate(res_df.iterrows()):
-        if row.start < 0:
-            if row.end < 0:
-                idx_to_remove.append(i)
-                log_info(f"Removed outlier:\n{row}", suppress=not print_info)
-            else:
-                res_df.at[index, "start"] = 0
-        if row.end > chr_lens[row.chrom]:
-            if row.start >= chr_lens[row.chrom]:
-                idx_to_remove.append(i)
-                log_info(f"Removed outlier:\n{row}", suppress=not print_info)
-            else:
-                res_df.at[index, "end"] = chr_lens[row.chrom]
+    chr_lens_s = cns_df["chrom"].map(chr_lens)
+    remove_mask = (cns_df["end"] < 0) | (cns_df["start"] >= chr_lens_s)
 
-    log_info(f"Removed outliers: {len(idx_to_remove)}", suppress=not print_info)
-    # remove from cns_df where idx_to_remove is in the index
-    res_df = res_df.drop(res_df.index[idx_to_remove]).sort_values(by=["sample_id", "chrom", "start"], ignore_index=True)
+    log_info(f"Removed outliers: {remove_mask.sum()}", suppress=not print_info)
+    res_df = cns_df[~remove_mask].copy()
+    chr_lens_res = res_df["chrom"].map(chr_lens)
+    res_df["start"] = res_df["start"].clip(lower=0)
+    res_df["end"] = np.minimum(res_df["end"].values, chr_lens_res.values)
+    res_df.sort_values(by=["sample_id", "chrom", "start"], inplace=True, ignore_index=True)
     return res_df
 
 # Makes sure that the columns are of the correct type
