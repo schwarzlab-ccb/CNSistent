@@ -442,5 +442,5 @@ def fill_nans_with_zeros(cns_df, cn_columns=None, print_info=True):
     log_info(f"Filling {res_df[cn_columns].isna().any(axis=1).sum()} NaN rows with zero", suppress=not print_info)
     # Fully missing chromosomes filled with 0
     for col in cn_columns:
-        res_df[col] = res_df[col].fillna(0.0).infer_objects(copy=False)
+        res_df[col] = res_df[col].fillna(0.0).infer_objects()
     return res_df

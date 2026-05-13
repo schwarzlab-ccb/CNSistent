@@ -106,7 +106,7 @@ def aggregate_by_segments(cns_df, segs, how="mean", cn_columns=None, print_info=
     i = 0
     for i, ((sample, chrom), group) in enumerate(cns_df_view.groupby(level=[0, 1])):
         if print_info:
-            print(f"Aggregating chr ({i+1}/{len(indices)})", end="\r")
+            log_info(f"Aggregating chr ({i+1}/{len(indices)})", suppress=False)
         if chrom not in segs:
             continue
         for seg_start, seg_end, seg_name in segs[chrom]:
@@ -117,7 +117,7 @@ def aggregate_by_segments(cns_df, segs, how="mean", cn_columns=None, print_info=
                 cn_segs = _mask_by_regs(sample, chrom, group.values, seg_start, seg_end, seg_name)
                 new_rows.extend(cn_segs)
     if print_info:
-        print(f"Aggregation finished. Converting {len(new_rows)} rows...", end="\r")
+        log_info(f"Aggregation finished. Converting {len(new_rows)} rows...", suppress=False)
     res_df = pd.DataFrame(new_rows, columns=sel_cols + ["name"]) 
     res_df["start"] = res_df["start"].astype(np.uint32)
     res_df["end"] = res_df["end"].astype(np.uint32)

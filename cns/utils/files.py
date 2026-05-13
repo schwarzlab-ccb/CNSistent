@@ -280,7 +280,7 @@ def load_segments(path):
         elif len(segs_df.columns) == 3:            
             segs_df["name"] = np.arange(len(segs_df))
         elif len(segs_df.columns) > 4:
-            print(f"Warning: File {path} has more than 4 columns. Only the first 4 columns are used.")
+            log_warn(f"File {path} has more than 4 columns. Only the first 4 columns are used.")
             segs_df = segs_df.iloc[:, :4]                
         segs_df.columns = ["chrom", "start", "end", "name"]  
     if not is_bed:

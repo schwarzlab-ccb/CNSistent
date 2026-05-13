@@ -70,7 +70,7 @@ def _calc_bases_per_chr_group(res, masked_cns_df, label, groups):
         subset = masked_cns_df.query("chrom in @names")
         length = calc_lengths(subset)
         res[f"{label}_{suffix}"] = length.groupby(subset["sample_id"]).sum()
-        res[f"{label}_{suffix}"] = res[f"{label}_{suffix}"].infer_objects(copy=False).fillna(0)
+        res[f"{label}_{suffix}"] = res[f"{label}_{suffix}"].infer_objects().fillna(0)
         res[f"{label}_{suffix}"] = res[f"{label}_{suffix}"].astype(np.int64)
     return res
 

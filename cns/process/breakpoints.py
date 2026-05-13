@@ -103,6 +103,6 @@ def make_breaks(break_type, strategy='scale', assembly=hg19):
     else:
         try:
             step_size = int(break_type)
-        except:
+        except ValueError:
             raise ValueError("break_type must be 'arms', 'cytobands' or an integer, got " + break_type)
         return _calc_genome_breaks(step_size, strategy=strategy, assembly=assembly)

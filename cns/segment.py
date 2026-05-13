@@ -191,7 +191,7 @@ def main():
     runtime = time.time() - start
     
     if print_info:
-        print(f"Finished in {runtime:.3f} seconds. Writing to {out_file}...")
+        log_info(f"Finished in {runtime:.3f} seconds. Writing to {out_file}...")
         if args.time:
             save_time(out_file, runtime, start)
     
