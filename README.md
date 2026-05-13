@@ -19,7 +19,8 @@ git clone git@github.com:ICCB-Cologne/CNSistent.git
 cd CNSistent
 pip install -e .
 wget -O out.tar.gz https://zenodo.org/records/14547456/files/out.tar.gz 
-tar -xzf out.tar.gz 
+mkdir -p out
+tar -xzf out.tar.gz -C ./out 
 rm out.tar.gz
 ```
 
