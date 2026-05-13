@@ -34,7 +34,7 @@ def _get_start_vector(assembly):
     return np.vectorize(lambda chrom: _get_start(chrom, assembly), otypes=[np.uint32])
 
 
-def plot_lines(ax, cns_df, cn_column, color="green", label=None, alpha=1.0, size=1, assembly=hg19):
+def plot_lines(ax, cns_df, cn_column, color="green", label=None, alpha=1.0, size=1, assembly=hg19, linestyle="-"):
     """
     Plots consecutive segments as lines on the given axis - centers of each segment are used as endpoints of each line.
 
@@ -70,12 +70,12 @@ def plot_lines(ax, cns_df, cn_column, color="green", label=None, alpha=1.0, size
     for _, group_df in cns_df.groupby(is_consecutive.cumsum()):
         length = group_df["end"] - group_df["start"]
         x = group_df["start"] + length / 2 + f_start_pos(group_df["chrom"])
-        ax.plot(x, group_df[cn_column], c=color, linewidth=size, label=label, alpha=alpha)
+        ax.plot(x, group_df[cn_column], c=color, linewidth=size, label=label, alpha=alpha, linestyle=linestyle)
         label = None  # only use label for the first segment
     return ax
 
 
-def plot_steps(ax, cns_df, cn_column, color="green", label=None, alpha=1.0, size=1, assembly=hg19):
+def plot_steps(ax, cns_df, cn_column, color="green", label=None, alpha=1.0, size=1, assembly=hg19, linestyle="-"):
     f_start_pos = _get_start_vector(assembly)
     is_consecutive = cns_df["start"] - cns_df["end"].shift(1) != 0
     # plot consecutive segments
@@ -85,7 +85,7 @@ def plot_steps(ax, cns_df, cn_column, color="green", label=None, alpha=1.0, size
         x = [val for pair in x_pairs for val in pair]
         y = [val for val in group_df[cn_column] for _ in (0, 1)]
 
-        ax.plot(x, y, c=color, linewidth=size, label=label, alpha=alpha)
+        ax.plot(x, y, c=color, linewidth=size, label=label, alpha=alpha, linestyle=linestyle)
         label = None  # only use label for the first segment
     return ax
 

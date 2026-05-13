@@ -50,15 +50,14 @@ do
     cns aggregate --segments "${out}/segs_1MB.bed" --out "${out}/${dataset}_bin_1MB.tsv" $shared_args
     cns aggregate --segments "${out}/segs_500KB.bed" --out "${out}/${dataset}_bin_500KB.tsv" $shared_args
     cns aggregate --segments "${out}/segs_250KB.bed" --out "${out}/${dataset}_bin_250KB.tsv" $shared_args
-    cns aggregate --segments "${out}/segs_100KB.bed" --out "${out}/${dataset}_bin_100KB.tsv" $shared_args
     cns aggregate --segments "${out}/segs_COSMIC.bed" --out "${out}/${dataset}_bin_COSMIC.tsv" $shared_args
-    cns aggregate --segments "${out}/segs_ENSEMBL.bed" --out "${out}/${dataset}_bin_ENSEMBL.tsv" $shared_args
+    # Uncomment for finer segmentations, but beware of long runtimes and large output files
+    # cns aggregate --segments "${out}/segs_100KB.bed" --out "${out}/${dataset}_bin_100KB.tsv" $shared_args
+    # cns aggregate --segments "${out}/segs_ENSEMBL.bed" --out "${out}/${dataset}_bin_ENSEMBL.tsv" $shared_args
     for dist in 1MB 500KB 250KB; do
         cns aggregate --segments "${out}/segs_merge_${dist}.bed" --out "${out}/${dataset}_bin_merge_${dist}.tsv" $shared_args 
     done
     # Uncomment for comparison with other aggregation methods
     # cns aggregate --segments "${out}/segs_COSMIC.bed" --out "${out}/${dataset}_bin_COSMIC_min.tsv" --how min $shared_args
-    # cns aggregate --segments "${out}/segs_ENSEMBL.bed" --out "${out}/${dataset}_bin_ENSEMBL_min.tsv" --how min $shared_args
     # cns aggregate --segments "${out}/segs_COSMIC.bed" --out "${out}/${dataset}_bin_COSMIC_max.tsv" --how max $shared_args
-    # cns aggregate --segments "${out}/segs_ENSEMBL.bed" --out "${out}/${dataset}_bin_ENSEMBL_max.tsv" --how max $shared_args
 done

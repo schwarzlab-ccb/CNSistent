@@ -2,6 +2,7 @@
 
 [![PyPI version](https://badge.fury.io/py/CNSistent.svg)](https://badge.fury.io/py/CNSistent)
 [![Documentation Status](https://readthedocs.org/projects/cnsistent/badge/?version=latest)](https://cnsistent.readthedocs.io/en/latest/?badge=latest)
+[![Tests](https://github.com/ICCB-Cologne/CNSistent/actions/workflows/python-test.yml/badge.svg)](https://github.com/ICCB-Cologne/CNSistent/actions/workflows/python-test.yml)
 
 CNSistent is a Python tool for processing and analyzing copy number data. It is designed to work with data from a variety of sources. The tool is designed to be easy to use, and to provide a comprehensive set of analyses and visualizations.
 
