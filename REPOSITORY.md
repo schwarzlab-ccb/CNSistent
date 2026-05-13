@@ -12,7 +12,7 @@ This repository contains raw data from PCAWG, TCGA, TRACERx, as well as genomic 
 
 ## Processing
 
-1. Clone the repository: `git clone https://bitbucket.org/schwarzlab/cnsistent`
+1. Clone the repository: `git clone https://github.com/ICCB-Cologne/CNSistent.git`
 2. Install dependencies (`pip install -r requirements.txt`) or create a Conda environment (`conda env create -f cnsistent.yml`).
 3. Install the package from location: `pip install -e .`
 The `-e` will make sure that the data files can be accessed under the `cns` package.

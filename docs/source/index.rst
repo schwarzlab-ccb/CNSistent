@@ -23,7 +23,7 @@ Installation links
 ------------------
 |PyPI version| |Documentation Status|
 
-#. `Full Bitbucket repository with ~1GB of data. <https://bitbucket.org/schwarzlab/cnsistent/src/main/REPOSITORY.md>`_
+#. `Full GitHub repository with ~1GB of data. <https://github.com/ICCB-Cologne/CNSistent>`_
 #. `PIP package only. <https://pypi.org/project/cnsistent/>`_
 
 
@@ -100,7 +100,7 @@ Group the CNS data by cancer type, calculate the total CN, and visualize mean li
     :alt: Grouped Data Heatmap
     :width: 800px
 
-The example code is also in `example_API.py <https://bitbucket.org/schwarzlab/cnsistent/src/main/example_API.py>`_.
+The example code is also in `example_API.py <https://github.com/ICCB-Cologne/CNSistent/blob/main/example_API.py>`_.
 
 Example in terminal
 -------------------
@@ -151,7 +151,7 @@ To conduct segmentation using 5 mb bins:
     segment whole --step 5000000 --out clust.bed
     cns aggregate data.tsv  --segments clust.bed --out c_bins.tsv
 
-Extention of the example is in `example_CLI.py <https://bitbucket.org/schwarzlab/cnsistent/src/main/example_CLI.py>`_.
+Extension of the example is in `example_CLI.sh <https://github.com/ICCB-Cologne/CNSistent/blob/main/example_CLI.sh>`_.
 
 .. toctree::
    :maxdepth: 2
@@ -164,5 +164,5 @@ Extention of the example is in `example_CLI.py <https://bitbucket.org/schwarzlab
    reference
 
 
-`LICENSE <https://bitbucket.org/schwarzlab/cnsistent/src/main/LICENSE.txt>`_
+`LICENSE <https://github.com/ICCB-Cologne/CNSistent/blob/main/LICENSE.txt>`_
 ----------------------------------------------------------------------------

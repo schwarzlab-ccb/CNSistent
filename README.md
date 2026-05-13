@@ -10,20 +10,35 @@ CNSistent is a Python tool for processing and analyzing copy number data. It is 
 
 CNSistent can be used as a Python package, or downloaded together with the respective data (PCAWG, TRACERx, TCGA, genomic locations):
 
-## Installation links
+## Installation
 
+### Option 1: Full package with the data 
 
- 1. [Full Bitbucket repository with ~1GB of data.](https://bitbucket.org/schwarzlab/cnsistent/src/main/REPOSITORY.md)
- 2. [PIP package only.](https://pypi.org/project/cnsistent/)
+```
+git clone git@github.com:ICCB-Cologne/CNSistent.git
+cd CNSistent
+pip install -e .
+wget -O out.tar.gz https://zenodo.org/records/14547456/files/out.tar.gz 
+tar -xzf out.tar.gz 
+rm out.tar.gz
+```
+
+> Note: the input data are part of the repository. The processed data can be downloaded and decompressed directly as shown above. Alternative is to generate the by running the `./scripts/data_process.sh` and `./scripts/data_aggregate.sh`.
+
+### Option 2: PIP package only
+
+```
+pip install CNSistent
+```
 
 
 ## Data
 
-The input dataset is also availble on Zenodo: [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.14677713.svg)](https://doi.org/10.5281/zenodo.14677713).
+The input dataset is also availble on Zenodo: [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.14677713.svg)](https://doi.org/10.5281/zenodo.14677713)
 
-The processed is availble on Zenodo: [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.14547456.svg)](https://doi.org/10.5281/zenodo.14547456).
+The processed data is available on Zenodo: [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.14547456.svg)](https://doi.org/10.5281/zenodo.14547456)
 
-Deep learning code is available on Zenodo: [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.14546762.svg)](https://doi.org/10.5281/zenodo.14546762).
+Deep learning code is available on Zenodo: [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.14546762.svg)](https://doi.org/10.5281/zenodo.14546762)
 
 
 ### Acessions
@@ -53,5 +68,5 @@ Cite: https://www.nature.com/articles/35057062
 ### Licenses
 
 Cite [Adam Streck, Roland F Schwarz, CNSistent integration and feature extraction from somatic copy number profiles, GigaScience, Volume 14, 2025, giaf104](https://doi.org/10.1093/gigascience/giaf104).
-The code is available under the [MIT License](https://bitbucket.org/schwarzlab/cnsistent/src/main/LICENSE.txt).
+The code is available under the [MIT License](https://github.com/ICCB-Cologne/CNSistent/blob/main/LICENSE.txt).
 The data and text files in the `data` and `docs` folders are available under the [CC BY-NC 4.0 license](https://creativecommons.org/licenses/by-nc/4.0/deed.en). 
