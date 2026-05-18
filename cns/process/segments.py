@@ -533,13 +533,7 @@ def add_arms(cns_df):
         The input DataFrame with an additional column "arm" indicating the chromosome arm.
     """
     arms = make_segments("arms")
-    def get_arm_for_segment(row):
-        chrom = row["chrom"]
-        end = row["end"]
-        if end <= arms[chrom][0][1]:
-            return arms[chrom][0][2][-1:]
-        else:
-            return arms[chrom][1][2][-1:]
-    
-    cns_df["arm"] = cns_df.apply(get_arm_for_segment, axis=1)
+    p_end = {chrom: segs[0][1] for chrom, segs in arms.items()}
+    is_p = cns_df["end"] <= cns_df["chrom"].map(p_end)
+    cns_df["arm"] = np.where(is_p, "p", "q")
     return cns_df
