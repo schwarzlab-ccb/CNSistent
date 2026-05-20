@@ -509,12 +509,18 @@ def fig_heatmap(cns_df, cn_columns=None, min_cn = 0, max_cn = 10, vertical = Non
     ax.margins(x=0, y=0)
 
     # Add legend
+    has_nan = cns_df[cn_columns].isna().any().any()
+    n_rows = n_columns if vertical else 1
+    axes_height_in = fig.get_figheight() / n_rows
+    extra_handles = 1 + int(has_nan)  # CN=0 entry + optional NaN entry
+    max_ticks = max(1, round(axes_height_in * 4.5) - extra_handles)
     handles = [mpatches.Patch(facecolor='red', label='0', edgecolor='black')]
-    for tick in _legend_ticks(min_cn, max_cn):
+    for tick in _legend_ticks(min_cn, max_cn, max_ticks):
         color = _get_CN_color(tick, min_cn, max_cn)
         label = str(int(tick)) if tick == int(tick) else f'{tick:.2f}'
         handles.append(mpatches.Patch(facecolor=color, label=label, edgecolor='black'))
-    handles.append(mpatches.Patch(facecolor='gray', label='NaN', edgecolor='black'))
+    if has_nan:
+        handles.append(mpatches.Patch(facecolor='gray', label='NaN', edgecolor='black'))
     if n_columns > 1:
         legend_ax = axes[0] if vertical else axes[-1]
     else:
@@ -680,7 +686,7 @@ def plot_x_ticks(ax, assembly=hg19, min_x=0, max_x=None):
     minor_tick_pos = []
     minor_tick_labels = []
     for chrom, length in positions:
-        if min_x <= x_pos <= max_x:
+        if x_pos < max_x and x_pos + length > min_x:
             label_text = "\n" + chrom[3:]
             major_tick_pos.append(x_pos)
             minor_tick_pos.append(x_pos + length / 2)
