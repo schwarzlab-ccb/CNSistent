@@ -53,7 +53,7 @@ def _add_sp_args(action, parser):
         parser.add_argument(
             "--how",
             type=str,
-            help="The aggregation function, one of ['min', 'max', 'mean', 'none']",
+            help="The aggregation function, one of ['min', 'max', 'mean', 'round', 'none']",
             required=False,
             default="mean",
         )

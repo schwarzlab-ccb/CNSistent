@@ -23,6 +23,11 @@ def _min_func(cns_array, weights):
     return [np.min(cns_array[:, i]) for i in range(cns_array.shape[1])]
 
 
+@njit
+def _round_func(cns_array, weights):
+    return [np.round(np.average(cns_array[:, i], weights=weights)) for i in range(cns_array.shape[1])]
+
+
 def _aggregate_regs(sample_id, chrom, values, seg_start, seg_end, seg_name, agg_func):
     row_id = 0
     seg_cns = []
@@ -71,7 +76,9 @@ def _get_agg_func(how):
         return _max_func
     if how == "min":
         return _min_func
-    raise ValueError("how must be one of ['mean', 'max', 'min', 'none', '']  got " + how)
+    if how == "round":
+        return _round_func
+    raise ValueError("how must be one of ['mean', 'max', 'min', 'round', 'none', '']  got " + how)
 
 
 # Add column names

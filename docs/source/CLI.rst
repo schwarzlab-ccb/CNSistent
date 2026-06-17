@@ -275,7 +275,7 @@ Aggregates CN values across segments, creating a consistent segmentation for eac
 
 Additional arguments:
 
-* ``--how``: ``mean, min, max, none``. The method to aggregate the CN values. If ``none`` is selected, the CN values are not aggregated, but existing segments are masked by the provided segments.
+* ``--how``: ``mean, min, max, round, none``. The method to aggregate the CN values. ``round`` computes the length-weighted mean and rounds it to the nearest integer. If ``none`` is selected, the CN values are not aggregated, but existing segments are masked by the provided segments.
 
 .. code-block:: bash
 

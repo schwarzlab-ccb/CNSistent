@@ -434,7 +434,7 @@ def main_aggregate(cns_df, segs, how="mean", cn_columns=None, print_info=False):
     segs : pandas.DataFrame
         DataFrame containing segments over which to aggregate CNS data.
     how : str, optional
-        Aggregation method. Options are "mean", "min", "max", or "none". Default is "mean".
+        Aggregation method. Options are "mean", "min", "max", "round", or "none". Default is "mean".
     cn_columns : list of str, optional
         List of column names for copy number data. If None, columns are inferred from `cns_df`.
     print_info : bool, optional

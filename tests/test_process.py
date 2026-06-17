@@ -426,7 +426,24 @@ class TestAggregation(unittest.TestCase):
             elif res.at[i, "chrom"] == "chr2":
                 self.assertTrue(res.at[i, "start"] >= 100)
                 self.assertTrue(res.at[i, "end"] <= 200)
-                
+
+    def test_agg_round(self):
+        segments = {'chr1': [(0, 100, 0)], 'chr2': [(100, 200, 1)]}
+        mean_res = aggregate_by_segments(self.cns, segments, how="mean", print_info=False)
+        round_res = aggregate_by_segments(self.cns, segments, how="round", print_info=False)
+        self.assertEqual(round_res.shape, mean_res.shape)
+        # rounding must match the rounded length-weighted mean for every value
+        for col in ["major_cn", "minor_cn"]:
+            for i in range(round_res.shape[0]):
+                mean_val = mean_res.at[i, col]
+                round_val = round_res.at[i, col]
+                if np.isnan(mean_val):
+                    self.assertTrue(np.isnan(round_val))
+                else:
+                    self.assertEqual(round_val, np.round(mean_val))
+        # spot-check a known value: s1 chr1 major_cn weighted mean 1.5 -> 2.0
+        self.assertEqual(round_res.at[0, "major_cn"], 2.0)
+
 
 class TestClustering(unittest.TestCase):
     def test_cluster_breaks(self):
