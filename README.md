@@ -66,6 +66,10 @@ Cite: https://academic.oup.com/nar/article/51/D1/D933/6786199
 Cytoband, Gap data obtained from: https://genome.ucsc.edu
 Cite: https://www.nature.com/articles/35057062
 
+Common fragile sites obtained from the HumCFS database: https://webs.iiitd.edu.in/raghava/humcfs/
+Cite: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6394038
+The HumCFS GRCh38/hg38 sites are cleaned and lifted over to hg19 (UCSC chain) by `scripts/build_fragile_sites.py`; see `cns/utils/fragile_sites.py` for the processing details.
+
 
 ### Licenses
 

@@ -63,14 +63,27 @@ Note that sex chromosomes are always expected to be named ``chrX`` and ``chrY``.
 
 .. code-block:: python
 
-    Assembly(name, chr_lens, chr_x, chr_y, gaps, cytobands)
+    Assembly(name, chr_lens, chr_x, chr_y, gaps, cytobands, fragile_sites)
 
 
 * ``chr_lens`` is a dictionary with chromosome names as keys and lengths as values. The ``chr_x`` and ``chr_y`` are
-* ``chr_x``, ``chr_y`` are the string ids for sex chromosomes. "chrX" and "chrY" are used by default.     
-* ``gaps``, ``cytobands`` are segment dictionaries for gaps and cytobands, respectively. 
+* ``chr_x``, ``chr_y`` are the string ids for sex chromosomes. "chrX" and "chrY" are used by default.
+* ``gaps``, ``cytobands`` are segment dictionaries for gaps and cytobands, respectively.
+* ``fragile_sites`` is a list of ``(chrom, start, end, name)`` common fragile sites for the assembly (see :ref:`fragile_sites`).
 
 These can be null unless you use ``regions_select("bands")`` or ``regions_select("gaps")``.
+
+.. _fragile_sites:
+
+Fragile sites
+`````````````
+
+Both assemblies bundle common fragile sites from the `HumCFS database <https://webs.iiitd.edu.in/raghava/humcfs/>`_.
+The native HumCFS release is in GRCh38/hg38; ``scripts/build_fragile_sites.py`` cleans those coordinates
+(normalizes chromosome casing, clamps terminal-band overshoots, drops one corrupt record) for the hg38 set
+and lifts them over to hg19 with the UCSC hg38→hg19 chain for the hg19 set. The full processing log is
+documented in ``cns/utils/fragile_sites.py``. Access them through the assembly (``hg19.fragile_sites``) or,
+per chromosome, via ``cns.data_utils.load_fragile_sites(assembly)``.
 
 
 Pipelines
@@ -178,7 +191,7 @@ Examples can be found in the :doc:`plotting notebook <plotting>`.
 Utils
 -----
 
-Utils contain the specification for the hg19, hg38 assemblies, including the gaps and cytobands. In addition, functions for files and data are provided:
+Utils contain the specification for the hg19, hg38 assemblies, including the gaps, cytobands, and common fragile sites. In addition, functions for files and data are provided:
 
 
 Files
@@ -202,6 +215,6 @@ Converts between CNS df, breakpoints, and segments.
 Data Utils
 ``````````
 
-* Functions to load the datasets (PCAWG, TCGA, TRACERx) and gene sets (Ensembl, COSMIC).
+* Functions to load the datasets (PCAWG, TCGA, TRACERx), gene sets (Ensembl, COSMIC), and common fragile sites (HumCFS, via ``load_fragile_sites``).
 * Default filtering to remove samples from the datasets (low coverage, diploid, blacklisted, ...)
 * Loading binned data / processed samples.
