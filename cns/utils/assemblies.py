@@ -1,5 +1,5 @@
 from .cytobands import hg19_cytobands, hg38_cytobands
-from .fragile_sites import hg19_fragile_sites
+from .fragile_sites import hg19_fragile_sites, hg38_fragile_sites
 from .gaps import hg19_gaps, hg38_gaps
 from .genomes import hg19_chr_lengths, hg38_chr_lengths
 
@@ -61,7 +61,8 @@ hg38 = Assembly(
     name="hg38",
     chr_lens=hg38_chr_lengths,
     cytobands=hg38_cytobands,
-    gaps=hg38_gaps
+    gaps=hg38_gaps,
+    fragile_sites=hg38_fragile_sites
 )
 """
 An instance of the Assembly class representing the hg38 genomic assembly.

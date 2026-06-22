@@ -254,9 +254,19 @@ def load_ENSEMBL():
     return load_segments(pjoin(data_path, "ENSEMBL_coding_genes.bed"))
 
 
-def load_fragile_sites():
-    """Load HumCFS common fragile sites (hg19), lifted from the GRCh38 HumCFS release."""
-    return load_segments(pjoin(data_path, "HumCFS_fragile_sites.bed"))
+def load_fragile_sites(assembly="hg19"):
+    """Load HumCFS common fragile sites for the given assembly ("hg19" or "hg38").
+
+    Returns a dict keyed by chromosome -> list of (start, end, name) segments, built
+    from the assembly's bundled annotation (cns/utils/fragile_sites.py), the same
+    source the assembly's ``fragile_sites`` attribute uses. The hg38 set is the cleaned
+    native HumCFS data; hg19 is lifted over from it.
+    """
+    from cns.utils.assemblies import get_assembly
+    from cns.process.segments import cns_df_to_segments
+    sites = get_assembly(assembly).fragile_sites
+    df = pd.DataFrame(sites, columns=["chrom", "start", "end", "name"])
+    return cns_df_to_segments(df)
 
 
 def samples_above_threshold(samples_df, threshold=50):
