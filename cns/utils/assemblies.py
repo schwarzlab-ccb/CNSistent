@@ -1,4 +1,5 @@
 from .cytobands import hg19_cytobands, hg38_cytobands
+from .fragile_sites import hg19_fragile_sites
 from .gaps import hg19_gaps, hg38_gaps
 from .genomes import hg19_chr_lengths, hg38_chr_lengths
 
@@ -20,9 +21,11 @@ class Assembly:
         The cytobands of the chromosomes.
     gaps : list
         The gaps in the chromosomes.
+    fragile_sites : list
+        The common fragile sites of the chromosomes.
     """
 
-    def __init__(self, name, chr_lens, x_name = "chrX", y_name = "chrY", cytobands=None, gaps=None):
+    def __init__(self, name, chr_lens, x_name = "chrX", y_name = "chrY", cytobands=None, gaps=None, fragile_sites=None):
         self.name = name
         self.chr_names = list(chr_lens.keys())
         self.sex_names = [x_name, y_name]
@@ -40,13 +43,15 @@ class Assembly:
         self.aut_len = self.gen_len - chr_lens[x_name] - chr_lens[y_name]
         self.cytobands = cytobands
         self.gaps = gaps
+        self.fragile_sites = fragile_sites
 
 
 hg19 = Assembly(
     name="hg19",
     chr_lens=hg19_chr_lengths,
     cytobands=hg19_cytobands,
-    gaps=hg19_gaps
+    gaps=hg19_gaps,
+    fragile_sites=hg19_fragile_sites
 )
 """
 An instance of the Assembly class representing the hg19 genomic assembly.

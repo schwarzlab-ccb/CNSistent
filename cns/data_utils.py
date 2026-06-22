@@ -254,6 +254,11 @@ def load_ENSEMBL():
     return load_segments(pjoin(data_path, "ENSEMBL_coding_genes.bed"))
 
 
+def load_fragile_sites():
+    """Load HumCFS common fragile sites (hg19), lifted from the GRCh38 HumCFS release."""
+    return load_segments(pjoin(data_path, "HumCFS_fragile_sites.bed"))
+
+
 def samples_above_threshold(samples_df, threshold=50):
     """
     Returns the original values from samples_df where 'type' occurs at least `threshold` times and is not 'Other'.

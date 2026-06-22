@@ -16,4 +16,5 @@ pycns.egg-info
 docs/build/
 copy_files.ps1
 test.tsv
+scripts/_humcfs_hg38/
 
