@@ -33,6 +33,10 @@ def gaps_to_df(gaps):
     return pd.DataFrame(gaps, columns=["chrom", "start", "end", "type", "bridge"])
 
 
+def fragile_sites_to_df(fragile_sites):
+    return pd.DataFrame(fragile_sites, columns=["chrom", "start", "end", "name"])
+
+
 def segments_to_cns_df(segments, sample_id="segment"):
     seg_list = []
     for chrom in sorted(segments.keys()):  # Sort the keys lexicographically

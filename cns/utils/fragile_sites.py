@@ -25,6 +25,18 @@ hg19 (120 sites) -- the same sites lifted over with the UCSC hg38->hg19 chain
   * 4 sites are dropped -- FRA10D (corrupt), and FRA1F / FRA1J / FRA9F, which lie in the
     1q12 / 9q12 heterochromatin gaps and have no reliable hg38<->hg19 alignment.
 
+Manual de-overlap edits (applied by hand after generation; hg19 -> 116 sites,
+hg38 -> 119 sites)
+------------------
+Several sites overlapped more than one other site. To make the set non-redundant:
+  * dropped FRA2S (~111 Mb chr2 band that subsumed FRA2D/E/L/A/B/F/K);
+  * dropped FRAXF (~141 Mb chrX band that subsumed FRAXB/C/A/D/E);
+  * dropped FRA12E (chr12 band that subsumed FRA12D/C);
+  * dropped FRAXE (exact duplicate of FRAXD);
+  * trimmed FRAXC/FRAXA boundaries so they abut instead of overlapping (hg19 only).
+FRA8C and FRA8E remain as exact duplicates (each overlaps only the other).
+Re-running build_fragile_sites.py will revert these edits unless folded into the script.
+
 Tuples are ``(chrom, start, end, name)``, 0-based half-open, matching the cytobands
 module. They are attached to the corresponding ``Assembly`` (see cns/utils/assemblies.py)
 and exposed per chromosome via ``cns.data_utils.load_fragile_sites(assembly)``.
@@ -43,7 +55,6 @@ hg19_fragile_sites = (
     ("chr1", 224287702, 236763300, "FRA1H"),
     ("chr1", 243863302, 249239820, "FRA1I"),
     ("chr2", 16881267, 19399761, "FRA2C"),
-    ("chr2", 44327139, 155756512, "FRA2S"),
     ("chr2", 53127138, 55227136, "FRA2D"),
     ("chr2", 68827132, 75227127, "FRA2E"),
     ("chr2", 83527124, 90372035, "FRA2L"),
@@ -118,7 +129,6 @@ hg19_fragile_sites = (
     ("chr11", 114370722, 121070709, "FRA11B"),
     ("chr12", 46793783, 55293784, "FRA12A"),
     ("chr12", 80693780, 92993776, "FRA12B"),
-    ("chr12", 109437805, 133841481, "FRA12E"),
     ("chr12", 112737804, 114737805, "FRA12D"),
     ("chr12", 114737805, 121137803, "FRA12C"),
     ("chr13", 34574137, 36074137, "FRA13A"),
@@ -145,12 +155,10 @@ hg19_fragile_sites = (
     ("chr20", 17880644, 21280638, "FRA20A"),
     ("chr22", 29995989, 32595987, "FRA22B"),
     ("chr22", 36296048, 50085080, "FRA22A"),
-    ("chrX", 14728122, 154499850, "FRAXF"),
     ("chrX", 29739423, 32761909, "FRAXB"),
-    ("chrX", 139382165, 141187786, "FRAXC"),
+    ("chrX", 139382165, 140987786, "FRAXC"),
     ("chrX", 140987786, 146181518, "FRAXA"),
     ("chrX", 146181518, 154499850, "FRAXD"),
-    ("chrX", 146181518, 154499850, "FRAXE"),
 )
 
 hg38_fragile_sites = (
@@ -168,7 +176,6 @@ hg38_fragile_sites = (
     ("chr1", 224100000, 236600000, "FRA1H"),
     ("chr1", 243700000, 248956422, "FRA1I"),
     ("chr2", 16700000, 19200000, "FRA2C"),
-    ("chr2", 44100000, 154900000, "FRA2S"),
     ("chr2", 52900000, 55000000, "FRA2D"),
     ("chr2", 68600000, 75000000, "FRA2E"),
     ("chr2", 83300000, 90500000, "FRA2L"),
@@ -244,7 +251,6 @@ hg38_fragile_sites = (
     ("chr11", 114500000, 121200000, "FRA11B"),
     ("chr12", 46400000, 54900000, "FRA12A"),
     ("chr12", 80300000, 92600000, "FRA12B"),
-    ("chr12", 109000000, 133275309, "FRA12E"),
     ("chr12", 112300000, 114300000, "FRA12D"),
     ("chr12", 114300000, 120700000, "FRA12C"),
     ("chr13", 34000000, 35500000, "FRA13A"),
@@ -271,10 +277,8 @@ hg38_fragile_sites = (
     ("chr20", 17900000, 21300000, "FRA20A"),
     ("chr22", 29600000, 32200000, "FRA22B"),
     ("chr22", 35900000, 49691432, "FRA22A"),
-    ("chrX", 14710000, 155270560, "FRAXF"),
     ("chrX", 29721306, 32743792, "FRAXB"),
-    ("chrX", 140300000, 142100000, "FRAXC"),
+    ("chrX", 140300000, 141900000, "FRAXC"),
     ("chrX", 141900000, 147100000, "FRAXA"),
     ("chrX", 147100000, 155270560, "FRAXD"),
-    ("chrX", 147100000, 155270560, "FRAXE"),
 )
